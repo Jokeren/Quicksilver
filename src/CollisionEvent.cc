@@ -72,6 +72,38 @@ bool CollisionEvent(MonteCarlo* monteCarlo, MC_Particle &mc_particle, unsigned i
       {
          currentCrossSection -= macroscopicCrossSection(monteCarlo, reactIndex, mc_particle.domain, mc_particle.cell,
                    isoIndex, mc_particle.energy_group);
+
+         // Initialize various data items.
+         int globalMatIndex = monteCarlo->domain[mc_particle.domain].cell_state[mc_particle.cell]._material;
+
+         double atomFraction = monteCarlo->_materialDatabase->_mat[globalMatIndex]._iso[isoIndex]._atomFraction;
+
+         double microscopicCrossSection = 0.0;
+         // The cell number density is the fraction of the atoms in cell
+         // volume of this isotope.  We set this (elsewhere) to 1/nIsotopes.
+         // This is a statement that we treat materials as if all of their
+         // isotopes are present in equal amounts
+         double cellNumberDensity = monteCarlo->domain[mc_particle.domain].cell_state[mc_particle.cell]._cellNumberDensity;
+
+         int isotopeGid = monteCarlo->_materialDatabase->_mat[globalMatIndex]._iso[isoIndex]._gid;
+         if ( atomFraction == 0.0 || cellNumberDensity == 0.0) {
+           currentCrossSection -= 1e-20;
+         } else {
+           if (reactIndex < 0)
+           {
+              // Return total cross section
+              microscopicCrossSection = monteCarlo->_nuclearData->getTotalCrossSection(isotopeGid, mc_particle.energy_group);
+           }
+           else
+           {
+              // Return the reaction cross section
+              microscopicCrossSection = monteCarlo->_nuclearData->getReactionCrossSection((unsigned int)reactIndex,
+                        isotopeGid, mc_particle.energy_group);
+           }
+
+           currentCrossSection -= atomFraction * cellNumberDensity * microscopicCrossSection;
+         }
+
          if (currentCrossSection < 0)
          {
             selectedIso = isoIndex;
