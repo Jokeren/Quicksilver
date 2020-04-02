@@ -41,7 +41,7 @@ namespace
    HOST_DEVICE_CUDA
    MC_Nearest_Facet MCT_Nearest_Facet_Find_Nearest(
       int num_facets_per_cell,
-      MC_Distance_To_Facet *distance_to_facet);
+      double *distance_to_facet);
 
    HOST_DEVICE_CUDA
    MC_Nearest_Facet MCT_Nearest_Facet_Find_Nearest(
@@ -52,7 +52,7 @@ namespace
       int &iteration, // input/output
       double &move_factor, // input/output
       int num_facets_per_cell,
-      MC_Distance_To_Facet *distance_to_facet,
+      double *distance_to_facet,
       int &retry /* output */ );
 
    HOST_DEVICE_CUDA
@@ -434,7 +434,7 @@ namespace
    ///  Loop over all the facets, return the minimum distance.
    HOST_DEVICE_CUDA
    MC_Nearest_Facet MCT_Nearest_Facet_Find_Nearest(int num_facets_per_cell,
-                                                   MC_Distance_To_Facet *distance_to_facet)
+                                                   double *distance_to_facet)
    {
       MC_Nearest_Facet nearest_facet;
 
@@ -445,20 +445,20 @@ namespace
       // Determine the facet that is closest to the specified coordinates.
       for (int facet_index = 0; facet_index < num_facets_per_cell; facet_index++)
       {
-         if ( distance_to_facet[facet_index].distance > 0.0 )
+         if ( distance_to_facet[facet_index] > 0.0 )
          {
-            if ( distance_to_facet[facet_index].distance <= nearest_facet.distance_to_facet )
+            if ( distance_to_facet[facet_index] <= nearest_facet.distance_to_facet )
             {
-               nearest_facet.distance_to_facet = distance_to_facet[facet_index].distance;
+               nearest_facet.distance_to_facet = distance_to_facet[facet_index];
                nearest_facet.facet             = facet_index;
             }
          }
          else // zero or negative distance
          {
-            if ( distance_to_facet[facet_index].distance > nearest_negative_facet.distance_to_facet )
+            if ( distance_to_facet[facet_index] > nearest_negative_facet.distance_to_facet )
             {
                // smallest in magnitude, but negative
-               nearest_negative_facet.distance_to_facet = distance_to_facet[facet_index].distance;
+               nearest_negative_facet.distance_to_facet = distance_to_facet[facet_index];
                nearest_negative_facet.facet             = facet_index;
             }
          }
@@ -491,7 +491,7 @@ namespace
                                                    int &iteration, // input/output
                                                    double &move_factor, // input/output
                                                    int num_facets_per_cell,
-                                                   MC_Distance_To_Facet *distance_to_facet,
+                                                   double *distance_to_facet,
                                                    int &retry /* output */ )
    {
       MC_Nearest_Facet nearest_facet = MCT_Nearest_Facet_Find_Nearest(num_facets_per_cell, distance_to_facet);
@@ -562,7 +562,7 @@ namespace
       // Initialize some data for the unstructured, hexahedral mesh.
       int num_facets_per_cell = domain.mesh._cellConnectivity[location.cell].num_facets;
 
-      MC_Distance_To_Facet distance_to_facet[24];
+      double distance_to_facet[24];
 
       while (true) // will break out when distance is found
       {
@@ -575,7 +575,7 @@ namespace
          for (int facet_index = 0; facet_index < num_facets_per_cell; facet_index++)
          {
 //to-do        mcco->distance_to_facet->task[my_task_num].facet[facet_index].distance = PhysicalConstants::_hugeDouble;
-            distance_to_facet[facet_index].distance = PhysicalConstants::_hugeDouble;
+            distance_to_facet[facet_index] = PhysicalConstants::_hugeDouble;
 
             MC_General_Plane &plane = domain.mesh._cellGeometry[location.cell]._facet[facet_index];
 
@@ -603,7 +603,7 @@ namespace
                coordinate, direction_cosine, false);
 
 //to-do        mcco->distance_to_facet->task[my_task_num].facet[facet_index].distance = t;
-            distance_to_facet[facet_index].distance = t;
+            distance_to_facet[facet_index] = t;
          } // for facet_index
 
          int retry = 0;
