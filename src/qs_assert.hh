@@ -1,5 +1,6 @@
 #include <cstdio>
 
+#if 0
 #ifdef __CUDA_ARCH__
 #define qs_assert( cond) \
    do \
@@ -18,4 +19,7 @@
         printf("file=%s: line=%d ERROR\n",__FILE__,__LINE__); \
       } \
    } while(0)
+#endif
+#else
+#define qs_assert(cond)
 #endif
