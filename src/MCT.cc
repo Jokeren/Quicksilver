@@ -562,6 +562,8 @@ namespace
       // Initialize some data for the unstructured, hexahedral mesh.
       int num_facets_per_cell = domain.mesh._cellConnectivity[location.cell].num_facets;
 
+      MC_Distance_To_Facet distance_to_facet[24];
+
       while (true) // will break out when distance is found
       {
          // Determine the distance to each facet of the cell.
@@ -569,8 +571,6 @@ namespace
          double plane_tolerance = 1e-16*(coordinate.x*coordinate.x +
                                          coordinate.y*coordinate.y +
                                          coordinate.z*coordinate.z);
-
-         MC_Distance_To_Facet distance_to_facet[24];
 
          for (int facet_index = 0; facet_index < num_facets_per_cell; facet_index++)
          {
