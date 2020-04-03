@@ -186,14 +186,14 @@ int NuclearData::addIsotope(
    return _isotopes.size() - 1;
 }
 
-HOST_DEVICE
-// Return the cross section for this energy group
-double NuclearDataReaction::getCrossSection(unsigned int group)
-{
-   qs_assert(group < _crossSection.size());
-   return _crossSection[group];
-}
-HOST_DEVICE_END
+//HOST_DEVICE
+//// Return the cross section for this energy group
+//double NuclearDataReaction::getCrossSection(unsigned int group)
+//{
+//   qs_assert(group < _crossSection.size());
+//   return _crossSection[group];
+//}
+//HOST_DEVICE_END
 
 HOST_DEVICE
 int NuclearData::getNumberReactions(unsigned int isotopeIndex)

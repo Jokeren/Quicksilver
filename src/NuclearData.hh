@@ -46,7 +46,11 @@ class NuclearDataReaction
    
 
    HOST_DEVICE_CUDA
-   double getCrossSection(unsigned int group);
+   double getCrossSection(unsigned int group) {
+     qs_assert(group < _crossSection.size());
+     return _crossSection[group];
+   }
+
    HOST_DEVICE_CUDA
    void sampleCollision(double incidentEnergy, double material_mass, double* energyOut,
                         double* angleOut, int &nOut, uint64_t* seed, int max_production_size);
