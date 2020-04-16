@@ -170,10 +170,10 @@ LDFLAGS =
 # Cuda on LLNL CORAL EA nodes
 ###############################################################################
 ## Choose one Cuda path
-CUDA_PATH = /usr/local/cuda-10.1
+CUDA_PATH = /sw/summit/cuda/10.1.243
 #CUDA_PATH = /usr/tcetmp/packages/cuda-9.0.176
 
-OPTFLAGS = -O2 -g -lineinfo
+OPTFLAGS = -O3 -g -lineinfo
 #OPTFLAGS = -O2 -g -lineinfo
 # Version below for debugging
 #OPTFLAGS = -DUSE_NVTX -g -G -lineinfo -O0
