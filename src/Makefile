@@ -170,25 +170,25 @@ LDFLAGS =
 # Cuda on LLNL CORAL EA nodes
 ###############################################################################
 ## Choose one Cuda path
-##CUDA_PATH = /usr/local/cuda-8.0
+CUDA_PATH = /usr/local/cuda
 #CUDA_PATH = /usr/tcetmp/packages/cuda-9.0.176
 
-#HOST_COMPILER = /usr/tce/packages/spectrum-mpi/spectrum-mpi-2017.04.03-xl-beta-2017.09.13/bin/mpixlC
+HOST_COMPILER = /home/kz21/Codes/spack/opt/spack/linux-rhel7-x86_64/gcc-7.3.0/gcc-7.3.0-xsbc5gb4yzetqm4tjaxg5sdry6y23hzb/bin/gcc
 
-#OPTFLAGS = -O2 
-## Version below for debugging
-##OPTFLAGS = -DUSE_NVTX -g -G -lineinfo -O0
+OPTFLAGS = -O3 -lineinfo 
+# Version below for debugging
+#OPTFLAGS = -DUSE_NVTX -g -G -lineinfo -O0
 
-#CUDA_FLAGS = -I${CUDA_PATH}/include/
-#CUDA_LDFLAGS = -L${CUDA_PATH}/lib64/ -lcuda -lcudart
-#
-#CXX=$(CUDA_PATH)/bin/nvcc
-#CXXFLAGS = -DHAVE_CUDA -std=c++11 $(OPTFLAGS) -Xptxas -v 
-#CXXFLAGS += -gencode=arch=compute_60,code=\"sm_60,compute_60\" 
-#CXXFLAGS += --compiler-bindir=$(HOST_COMPILER)
-#CPPFLAGS = -x cu -dc -DHAVE_MPI -DHAVE_ASYNC_MPI
-#LDFLAGS  = $(CUDA_LDFLAGS) 
-##LDFLAGS += ${CUDA_PATH}/lib64/libnvToolsExt.so
+CUDA_FLAGS = -I${CUDA_PATH}/include/
+CUDA_LDFLAGS = -L${CUDA_PATH}/lib64/ -lcuda -lcudart
+
+CXX=$(CUDA_PATH)/bin/nvcc
+CXXFLAGS = -DHAVE_CUDA -std=c++11 $(OPTFLAGS) -Xptxas -v 
+CXXFLAGS += -gencode=arch=compute_70,code=\"sm_70,compute_70\" 
+CXXFLAGS += --compiler-bindir=$(HOST_COMPILER)
+CPPFLAGS = -x cu -dc
+LDFLAGS  = $(CUDA_LDFLAGS) 
+LDFLAGS += ${CUDA_PATH}/lib64/libnvToolsExt.so
 
 
 
