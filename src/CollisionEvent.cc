@@ -53,6 +53,8 @@ bool CollisionEvent(MonteCarlo* monteCarlo, MC_Particle &mc_particle, unsigned i
 
    int globalMatIndex = cell._material;
 
+   double cellNumberDensity = cell._cellNumberDensity;
+
    //------------------------------------------------------------------------------------------------------------------
    //    Pick the isotope and reaction.
    //------------------------------------------------------------------------------------------------------------------
@@ -67,11 +69,26 @@ bool CollisionEvent(MonteCarlo* monteCarlo, MC_Particle &mc_particle, unsigned i
    for (int isoIndex = 0; isoIndex < numIsos && currentCrossSection >= 0; isoIndex++)
    {
       int uniqueNumber = monteCarlo->_materialDatabase->_mat[globalMatIndex]._iso[isoIndex]._gid;
+      double atomFraction = monteCarlo->_materialDatabase->_mat[globalMatIndex]._iso[isoIndex]._atomFraction;
+
       int numReacts = monteCarlo->_nuclearData->getNumberReactions(uniqueNumber);
       for (int reactIndex = 0; reactIndex < numReacts; reactIndex++)
       {
-         currentCrossSection -= macroscopicCrossSection(monteCarlo, reactIndex, mc_particle.domain, mc_particle.cell,
-                   isoIndex, mc_particle.energy_group);
+         // The cell number density is the fraction of the atoms in cell
+         // volume of this isotope.  We set this (elsewhere) to 1/nIsotopes.
+         // This is a statement that we treat materials as if all of their
+         // isotopes are present in equal amounts
+
+         if (atomFraction == 0.0 || cellNumberDensity == 0.0) {
+           currentCrossSection -= 1e-20;
+         } else {
+           // Return the reaction cross section
+           double microscopicCrossSection = monteCarlo->_nuclearData->getReactionCrossSection((unsigned int)reactIndex,
+             uniqueNumber, mc_particle.energy_group);
+
+           currentCrossSection -= atomFraction * cellNumberDensity * microscopicCrossSection;
+         }
+
          if (currentCrossSection < 0)
          {
             selectedIso = isoIndex;

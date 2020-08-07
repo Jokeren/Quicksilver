@@ -103,7 +103,11 @@ class NuclearData
    HOST_DEVICE_CUDA
    double getTotalCrossSection(unsigned int isotopeIndex, unsigned int group);
    HOST_DEVICE_CUDA
-   double getReactionCrossSection(unsigned int reactIndex, unsigned int isotopeIndex, unsigned int group);
+   double getReactionCrossSection(unsigned int reactIndex, unsigned int isotopeIndex, unsigned int group) {
+     qs_assert(isotopeIndex < _isotopes.size());
+     qs_assert(reactIndex < _isotopes[isotopeIndex]._species[0]._reactions.size());
+     return _isotopes[isotopeIndex]._species[0]._reactions[reactIndex].getCrossSection(group);
+   }
 
    int _numEnergyGroups;
    // Store the cross sections and reactions by isotope, which stores

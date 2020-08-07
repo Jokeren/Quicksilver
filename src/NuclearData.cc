@@ -244,13 +244,13 @@ double NuclearData::getTotalCrossSection(unsigned int isotopeIndex, unsigned int
 HOST_DEVICE_END
 
 // Return the total cross section for this energy group
-HOST_DEVICE
-double NuclearData::getReactionCrossSection(
-   unsigned int reactIndex, unsigned int isotopeIndex, unsigned int group)
-{
-   qs_assert(isotopeIndex < _isotopes.size());
-   qs_assert(reactIndex < _isotopes[isotopeIndex]._species[0]._reactions.size());
-   return _isotopes[isotopeIndex]._species[0]._reactions[reactIndex].getCrossSection(group);
-}
-HOST_DEVICE_END
+//HOST_DEVICE
+//double NuclearData::getReactionCrossSection(
+//   unsigned int reactIndex, unsigned int isotopeIndex, unsigned int group)
+//{
+//   qs_assert(isotopeIndex < _isotopes.size());
+//   qs_assert(reactIndex < _isotopes[isotopeIndex]._species[0]._reactions.size());
+//   return _isotopes[isotopeIndex]._species[0]._reactions[reactIndex].getCrossSection(group);
+//}
+//HOST_DEVICE_END
 
