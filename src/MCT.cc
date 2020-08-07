@@ -438,10 +438,6 @@ namespace
    {
       MC_Nearest_Facet nearest_facet;
 
-      // largest negative distance (smallest magnitude, but negative)
-      MC_Nearest_Facet nearest_negative_facet;
-      nearest_negative_facet.distance_to_facet = -PhysicalConstants::_hugeDouble;
-
       // Determine the facet that is closest to the specified coordinates.
       for (int facet_index = 0; facet_index < num_facets_per_cell; facet_index++)
       {
@@ -453,26 +449,32 @@ namespace
                nearest_facet.facet             = facet_index;
             }
          }
-         else // zero or negative distance
-         {
-            if ( distance_to_facet[facet_index].distance > nearest_negative_facet.distance_to_facet )
-            {
-               // smallest in magnitude, but negative
-               nearest_negative_facet.distance_to_facet = distance_to_facet[facet_index].distance;
-               nearest_negative_facet.facet             = facet_index;
-            }
-         }
+         //else // zero or negative distance
+         //{
+         //   if ( distance_to_facet[facet_index].distance > nearest_negative_facet.distance_to_facet )
+         //   {
+         //      // smallest in magnitude, but negative
+         //      nearest_negative_facet.distance_to_facet = distance_to_facet[facet_index].distance;
+         //      nearest_negative_facet.facet             = facet_index;
+         //   }
+         //}
       }
 
 
       if ( nearest_facet.distance_to_facet == PhysicalConstants::_hugeDouble )
       {
-         if ( nearest_negative_facet.distance_to_facet != -PhysicalConstants::_hugeDouble )
-         {
-            // no positive solution, so allow a negative solution, that had really small magnitude.
-            nearest_facet.distance_to_facet = nearest_negative_facet.distance_to_facet;
-            nearest_facet.facet             = nearest_negative_facet.facet;
-         }
+        // largest negative distance (smallest magnitude, but negative)
+        nearest_facet.distance_to_facet = -PhysicalConstants::_hugeDouble;
+        for (int facet_index = 0; facet_index < num_facets_per_cell; facet_index++)
+        {
+          if ( distance_to_facet[facet_index].distance > nearest_facet.distance_to_facet) {
+            {
+              // no positive solution, so allow a negative solution, that had really small magnitude.
+              nearest_facet.distance_to_facet = distance_to_facet[facet_index].distance;
+              nearest_facet.facet             = facet_index;
+            }
+          }
+        }
       }
 
       return nearest_facet;
