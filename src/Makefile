@@ -173,7 +173,11 @@ LDFLAGS =
 ##CUDA_PATH = /usr/local/cuda-8.0
 #CUDA_PATH = /usr/tcetmp/packages/cuda-9.0.176
 
-#HOST_COMPILER = /usr/tce/packages/spectrum-mpi/spectrum-mpi-2017.04.03-xl-beta-2017.09.13/bin/mpixlC
+HOST_COMPILER = gcc
+
+OPTFLAGS = -O3 -lineinfo 
+# Version below for debugging
+#OPTFLAGS = -DUSE_NVTX -g -G -lineinfo -O0
 
 #OPTFLAGS = -O2 
 ## Version below for debugging
